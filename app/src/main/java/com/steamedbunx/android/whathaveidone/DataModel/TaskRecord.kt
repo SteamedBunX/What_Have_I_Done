@@ -6,5 +6,4 @@ data class TaskRecord(
     val name:String,
     val date: Date,
     val length: Long
-) {
-}
+)

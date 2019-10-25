@@ -21,6 +21,32 @@ class Utils {
                 && startingDay.get(Calendar.YEAR) == today.get(Calendar.YEAR)
     }
 
+    fun getTimerString(time: Int): String {
+        val hour: Int = time / 3600
+        val hourString: String =
+            if(hour >= 10)
+            {
+                (hour).toString()
+            } else
+            {
+                "0$hour"
+            }
+        val minute: Int = time % 3600 / 60
+        val minuteString: String =
+            if (minute >= 10) {
+                (minute).toString()
+            } else {
+                "0$minute"
+            }
+        val second = time % 60
+        val secondString =
+            if (second >= 10) {
+                "$second"
+            } else {
+                "0$second"
+            }
+        return "$hourString:$minuteString:$secondString"
+    }
 
 
 }

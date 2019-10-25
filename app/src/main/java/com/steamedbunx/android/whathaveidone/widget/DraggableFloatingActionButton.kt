@@ -10,32 +10,47 @@ import java.security.KeyStore
 import android.view.ViewGroup
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.util.Log
+import kotlin.math.abs
+import kotlin.math.max
 
 
+class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener {
 
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
-
-class DraggableFloatingActionButton: FloatingActionButton,View.OnTouchListener{
-
-    constructor(context:Context):super(context)
-    constructor(context:Context, attrs:AttributeSet):super(context,attrs)
-    constructor(context:Context, attrs:AttributeSet, defStyleAttr:Int):super(context,attrs, defStyleAttr)
-
-    init{
+    init {
         setOnTouchListener(this)
     }
 
-    val CLICK_DRAG_TOLERANCE =
-        10f
     // Often, there will be a slight, unintentional, drag when the user taps the FAB, so we need to account for this.
+    val CLICK_DRAG_TOLERANCE = 20f
+    // keep track of the original position so it can go back to it when button is released
+    var ogX: Float = 0f
+    var ogY: Float = 0f
 
-    var ogX:Float = 0f
-    var ogY:Float = 0f
     var downRawX: Float = 0f
     var downRawY = 0f
     var dX = 0f
     var dY = 0f
 
+    // Y coordinate for what's counted as far release
+    var farReleaseY = 10000f
+
+    // listener
+    var customListener: CustomDraggableFloatingActionButtonListener? = null
+
+    fun setCustomListner(customDraggableFloatingActionButtonListener: CustomDraggableFloatingActionButtonListener) {
+        customListener = customDraggableFloatingActionButtonListener
+    }
+
+    // when it's drawn, get the original position
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         ogX = x
@@ -45,12 +60,13 @@ class DraggableFloatingActionButton: FloatingActionButton,View.OnTouchListener{
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
 
         val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-
         val action = motionEvent.action
         if (action == MotionEvent.ACTION_DOWN) {
 
+
             downRawX = motionEvent.rawX
             downRawY = motionEvent.rawY
+
             dX = view.x - downRawX
             dY = view.y - downRawY
 
@@ -91,6 +107,8 @@ class DraggableFloatingActionButton: FloatingActionButton,View.OnTouchListener{
                 .setDuration(0)
                 .start()
 
+            customListener?.onYMove(max(ogY - newY, 0f))
+
             return true // Consumed
 
         } else if (action == MotionEvent.ACTION_UP) {
@@ -103,14 +121,29 @@ class DraggableFloatingActionButton: FloatingActionButton,View.OnTouchListener{
             if (Math.abs(upDX) < CLICK_DRAG_TOLERANCE && Math.abs(upDY) < CLICK_DRAG_TOLERANCE) { // A click
                 performClick()
             } else {
-                view.animate()
-                    .x(ogX)
-                    .y(ogY)
-                    .setDuration(500)
-                    .start()
+                restoreLocation(view)
+                if (upDY > farReleaseY) {
+                    customListener?.onFarRelease()
+                } else {
+                    customListener?.onNearRelease()
+                }
                 return true // Consumed
             }
         }
         return super.onTouchEvent(motionEvent)
     }
+
+    fun restoreLocation(view: View) {
+        view.animate()
+            .x(ogX)
+            .y(ogY)
+            .setDuration(500)
+            .start()
+    }
+}
+
+interface CustomDraggableFloatingActionButtonListener {
+    fun onYMove(yDelta: Float)
+    fun onNearRelease()
+    fun onFarRelease()
 }

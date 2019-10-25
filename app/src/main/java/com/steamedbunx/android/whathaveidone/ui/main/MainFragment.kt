@@ -45,7 +45,7 @@ class MainFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.timer.start()
+        viewModel.timer.catchUp()
     }
 
     override fun onStop() {

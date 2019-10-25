@@ -73,7 +73,6 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
             return true // Consumed
 
         } else if (action == MotionEvent.ACTION_MOVE) {
-
             val viewWidth = view.width
             val viewHeight = view.height
 
@@ -101,6 +100,7 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
                 newY
             ) // Don't allow the FAB past the bottom of the parent
 
+
             view.animate()
                 .x(newX)
                 .y(newY)
@@ -119,6 +119,7 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
             val upDY = upRawY - downRawY
 
             if (Math.abs(upDX) < CLICK_DRAG_TOLERANCE && Math.abs(upDY) < CLICK_DRAG_TOLERANCE) { // A click
+                restoreLocation(view)
                 performClick()
             } else {
                 restoreLocation(view)

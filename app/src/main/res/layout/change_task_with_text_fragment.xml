@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        tools:context=".ui.changeTaskWithText.ChangeTaskWithTextFragment">
+
+        <TextView
+            android:id="@+id/textView_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="Change Task To"
+            android:textColor="@color/colorTextWhite"
+            android:textSize="56sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editText_new_task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/rounded_corner_text_edit"
+            android:ems="10"
+            android:hint="Enter Your Next Task"
+            android:imeOptions="actionSend"
+            android:inputType="textPersonName"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:textColorHint="@color/colorAccent"
+            android:textSize="36dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="30dp"
+            android:background="@color/color_floating" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

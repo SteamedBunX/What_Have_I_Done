@@ -13,40 +13,38 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.util.Log
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 
 
 class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
-    )
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
+            : super(context, attrs, defStyleAttr)
 
     init {
         setOnTouchListener(this)
     }
 
     // Often, there will be a slight, unintentional, drag when the user taps the FAB, so we need to account for this.
-    val CLICK_DRAG_TOLERANCE = 20f
+    private val CLICK_DRAG_TOLERANCE = 15f
     // keep track of the original position so it can go back to it when button is released
-    var ogX: Float = 0f
-    var ogY: Float = 0f
+    private var ogX = 0f
+    private var ogY= 0f
 
-    var downRawX: Float = 0f
-    var downRawY = 0f
-    var dX = 0f
-    var dY = 0f
+    private var downRawX = 0f
+    private var downRawY = 0f
+    private var dX = 0f
+    private var dY = 0f
 
     // Y coordinate for what's counted as far release
-    var farReleaseY = 10000f
+    private var farReleaseY = 10000f
 
     // listener
-    var customListener: CustomDraggableFloatingActionButtonListener? = null
+    private var customListener: CustomDraggableFloatingActionButtonListener? = null
 
-    fun setCustomListner(customDraggableFloatingActionButtonListener: CustomDraggableFloatingActionButtonListener) {
+    fun setCustomListener(customDraggableFloatingActionButtonListener: CustomDraggableFloatingActionButtonListener) {
         customListener = customDraggableFloatingActionButtonListener
     }
 
@@ -81,21 +79,21 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
             val parentHeight = viewParent.height
 
             var newX = motionEvent.rawX + dX
-            newX = Math.max(
+            newX = max(
                 layoutParams.leftMargin.toFloat(),
                 newX
             ) // Don't allow the FAB past the left hand side of the parent
-            newX = Math.min(
+            newX = min(
                 (parentWidth - viewWidth - layoutParams.rightMargin).toFloat(),
                 newX
             ) // Don't allow the FAB past the right hand side of the parent
 
             var newY = motionEvent.rawY + dY
-            newY = Math.max(
+            newY = max(
                 layoutParams.topMargin.toFloat(),
                 newY
             ) // Don't allow the FAB past the top of the parent
-            newY = Math.min(
+            newY = min(
                 (parentHeight - viewHeight - layoutParams.bottomMargin).toFloat(),
                 newY
             ) // Don't allow the FAB past the bottom of the parent
@@ -118,7 +116,7 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
             val upDX = upRawX - downRawX
             val upDY = upRawY - downRawY
 
-            if (Math.abs(upDX) < CLICK_DRAG_TOLERANCE && Math.abs(upDY) < CLICK_DRAG_TOLERANCE) { // A click
+            if (abs(upDX) < CLICK_DRAG_TOLERANCE && abs(upDY) < CLICK_DRAG_TOLERANCE) { // A click
                 restoreLocation(view)
                 performClick()
             } else {
@@ -131,10 +129,10 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
                 return true // Consumed
             }
         }
-        return super.onTouchEvent(motionEvent)
+        return true
     }
 
-    fun restoreLocation(view: View) {
+    private fun restoreLocation(view: View) {
         view.animate()
             .x(ogX)
             .y(ogY)

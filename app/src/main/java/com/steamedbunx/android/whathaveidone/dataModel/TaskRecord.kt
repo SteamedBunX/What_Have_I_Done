@@ -1,4 +1,4 @@
-package com.steamedbunx.android.whathaveidone.DataModel
+package com.steamedbunx.android.whathaveidone.dataModel
 
 import java.util.*
 

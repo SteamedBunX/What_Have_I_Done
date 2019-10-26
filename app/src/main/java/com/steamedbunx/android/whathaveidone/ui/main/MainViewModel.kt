@@ -17,7 +17,7 @@ class MainViewModel : ViewModel() {
         timer.onTickListener = timerListner
     }
 
-    private val  _currentTask: MutableLiveData<String> = MutableLiveData<String>("")
+    private val  _currentTask: MutableLiveData<String> = MutableLiveData<String>("Nothing")
     val currentTask:LiveData<String>
         get() = _currentTask
 
@@ -29,12 +29,15 @@ class MainViewModel : ViewModel() {
 
     }
 
-    fun changeTask(taskName: String){
-        if(taskName != currentTask.value) {
+    fun changeTask(taskName: String): Boolean{
+        if(taskName != currentTask.value
+            && !taskName.isBlank()) {
             storeTaskToLog()
             _currentTask.value = taskName
             timer.reset()
+            return true
         }
+        return false
     }
 
     fun storeTaskToLog(){

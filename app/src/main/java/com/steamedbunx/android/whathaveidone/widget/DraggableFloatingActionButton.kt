@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.util.Log
+import com.steamedbunx.android.whathaveidone.TAG
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -46,6 +47,10 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
 
     fun setCustomListener(customDraggableFloatingActionButtonListener: CustomDraggableFloatingActionButtonListener) {
         customListener = customDraggableFloatingActionButtonListener
+    }
+
+    fun setFarRelease(y: Float){
+        farReleaseY = y
     }
 
     // when it's drawn, get the original position
@@ -120,12 +125,14 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
                 restoreLocation(view)
                 performClick()
             } else {
-                restoreLocation(view)
-                if (upDY > farReleaseY) {
+                Log.i(TAG, "updy = $upDY , farReleaseY = $farReleaseY")
+                if (-upDY > farReleaseY) {
                     customListener?.onFarRelease()
                 } else {
                     customListener?.onNearRelease()
                 }
+                restoreLocation(view)
+
                 return true // Consumed
             }
         }

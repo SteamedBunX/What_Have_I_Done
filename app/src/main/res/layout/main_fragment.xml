@@ -59,9 +59,9 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CURRENT DOING"
+            android:text="CURRENTLY DOING"
             android:textColor="@color/colorTextWhite"
-            android:textSize="84sp"
+            android:textSize="76sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/text_current_task"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,12 +73,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0"
+            android:background="@drawable/night_sky"
+            android:contentDescription="night_sky"
+            android:foreground="@drawable/night_sky"
+            android:scaleType="fitXY"
             android:src="@android:color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone"/>
+            app:srcCompat="@drawable/night_sky"
+            tools:alpha="100"
+            tools:visibility="gone" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"

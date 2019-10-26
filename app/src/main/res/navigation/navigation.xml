@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_mainFragment_to_changeTaskWithTextFragment"
             app:destination="@id/changeTaskWithTextFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_changeTaskWithGestureFragment"
+            app:destination="@id/changeTaskWithGestureFragment" />
     </fragment>
     <fragment
         android:id="@+id/changeTaskWithTextFragment"
@@ -19,6 +22,15 @@
         android:label="ChangeTaskWithTextFragment" >
         <action
             android:id="@+id/action_changeTaskWithTextFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changeTaskWithGestureFragment"
+        android:name="com.steamedbunx.android.whathaveidone.ui.changeTaskWithGesture.ChangeTaskWithGestureFragment"
+        android:label="change_task_with_gesture_fragment"
+        tools:layout="@layout/change_task_with_gesture_fragment" >
+        <action
+            android:id="@+id/action_changeTaskWithGestureFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

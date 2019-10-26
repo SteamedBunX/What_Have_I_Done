@@ -2,6 +2,8 @@ package com.steamedbunx.android.whathaveidone.ui.main
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.Display
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.steamedbunx.android.whathaveidone.R
 import com.steamedbunx.android.whathaveidone.databinding.MainFragmentBinding
 import com.steamedbunx.android.whathaveidone.widget.CustomDraggableFloatingActionButtonListener
@@ -41,6 +44,10 @@ class MainFragment : Fragment() {
         binding.fabChangeTask.setOnClickListener(
             Navigation.createNavigateOnClickListener(R.id.action_mainFragment_to_changeTaskWithTextFragment)
         )
+        val displayMatrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(displayMatrics)
+        val farReleaseY = (displayMatrics.heightPixels) /3f
+        binding.fabChangeTask.setFarRelease(farReleaseY)
         setupObservers()
     }
 
@@ -68,7 +75,7 @@ class MainFragment : Fragment() {
     val customDFABListener: CustomDraggableFloatingActionButtonListener =
         object : CustomDraggableFloatingActionButtonListener {
             override fun onYMove(yDelta: Float) {
-                setOverlayAlpha(yDelta / binding.root.height)
+                setOverlayAlpha(yDelta / binding.root.height * 2)
             }
 
             override fun onNearRelease() {
@@ -76,7 +83,7 @@ class MainFragment : Fragment() {
             }
 
             override fun onFarRelease() {
-                fadeOutOverlay()
+                view?.findNavController()?.navigate(R.id.action_mainFragment_to_changeTaskWithGestureFragment)
             }
 
         }

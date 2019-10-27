@@ -1,6 +1,7 @@
 package com.steamedbunx.android.whathaveidone.widget
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.util.Log
+import com.steamedbunx.android.whathaveidone.R
 import com.steamedbunx.android.whathaveidone.TAG
 import kotlin.math.abs
 import kotlin.math.max
@@ -62,6 +64,8 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
 
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
 
+
+        //super.onTouchEvent(motionEvent)
         val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
         val action = motionEvent.action
         if (action == MotionEvent.ACTION_DOWN) {
@@ -73,7 +77,7 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
             dX = view.x - downRawX
             dY = view.y - downRawY
 
-            return true // Consumed
+            return view?.onTouchEvent(motionEvent) // Consumed
 
         } else if (action == MotionEvent.ACTION_MOVE) {
             val viewWidth = view.width
@@ -112,7 +116,7 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
 
             customListener?.onYMove(max(ogY - newY, 0f))
 
-            return true // Consumed
+            return view?.onTouchEvent(motionEvent) // Consumed
 
         } else if (action == MotionEvent.ACTION_UP) {
             val upRawX = motionEvent.rawX
@@ -133,10 +137,10 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
                 }
                 restoreLocation(view)
 
-                return true // Consumed
+                return view?.onTouchEvent(motionEvent) // Consumed
             }
         }
-        return true
+        return view?.onTouchEvent(motionEvent)
     }
 
     private fun restoreLocation(view: View) {

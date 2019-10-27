@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.steamedbunx.android.whathaveidone.R
@@ -17,6 +18,8 @@ import com.steamedbunx.android.whathaveidone.databinding.MainFragmentBinding
 import com.steamedbunx.android.whathaveidone.widget.CustomDraggableFloatingActionButtonListener
 
 class MainFragment : Fragment() {
+
+    lateinit var navController: NavController
 
     companion object {
         fun newInstance() = MainFragment()
@@ -37,6 +40,7 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        navController = requireView().findNavController()
         viewModel = requireActivity().run {
             ViewModelProviders.of(this).get(MainViewModel::class.java)
         }
@@ -83,7 +87,9 @@ class MainFragment : Fragment() {
             }
 
             override fun onFarRelease() {
-                view?.findNavController()?.navigate(R.id.action_mainFragment_to_changeTaskWithGestureFragment)
+                if(navController.currentDestination?.id == R.id.mainFragment) {
+                    navController.navigate(R.id.action_mainFragment_to_changeTaskWithGestureFragment)
+                }
             }
 
         }

@@ -3,7 +3,6 @@ package com.steamedbunx.android.whathaveidone.ui.main
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.Display
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import com.steamedbunx.android.whathaveidone.MainViewModelFactory
 import com.steamedbunx.android.whathaveidone.R
 import com.steamedbunx.android.whathaveidone.databinding.MainFragmentBinding
 import com.steamedbunx.android.whathaveidone.widget.CustomDraggableFloatingActionButtonListener
@@ -41,18 +41,30 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         navController = requireView().findNavController()
-        viewModel = requireActivity().run {
-            ViewModelProviders.of(this).get(MainViewModel::class.java)
-        }
-        binding.fabChangeTask.setCustomListener(customDFABListener)
-        binding.fabChangeTask.setOnClickListener(
-            Navigation.createNavigateOnClickListener(R.id.action_mainFragment_to_changeTaskWithTextFragment)
-        )
+        setupViewModel()
+
+        setupListeners()
+
         val displayMatrics = DisplayMetrics()
         requireActivity().windowManager.defaultDisplay.getMetrics(displayMatrics)
         val farReleaseY = (displayMatrics.heightPixels) /3f
         binding.fabChangeTask.setFarRelease(farReleaseY)
+
         setupObservers()
+    }
+
+    private fun setupListeners() {
+        binding.fabChangeTask.setCustomListener(customDFABListener)
+        binding.fabChangeTask.setOnClickListener(
+            Navigation.createNavigateOnClickListener(R.id.action_mainFragment_to_changeTaskWithTextFragment)
+        )
+    }
+
+    private fun setupViewModel() {
+        val factory = MainViewModelFactory(requireActivity().application)
+        viewModel = requireActivity().run {
+            ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
+        }
     }
 
     override fun onResume() {

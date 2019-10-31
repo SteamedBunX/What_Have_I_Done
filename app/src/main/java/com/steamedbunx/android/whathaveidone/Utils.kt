@@ -2,7 +2,7 @@ package com.steamedbunx.android.whathaveidone
 
 import java.util.*
 
-class Utils {
+class Utils private constructor() {
 
     companion object {
         private val instance = Utils()

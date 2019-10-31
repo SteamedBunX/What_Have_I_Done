@@ -8,7 +8,7 @@ import java.util.*
 class CountUpTimer(var startTime: Date = Date()) {
 
     var onTickListener: OnTickListener? = null
-    val utils = Utils()
+    val utils = Utils.getInstence()
 
     init {
         startTime = startTime

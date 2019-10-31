@@ -30,6 +30,7 @@ class CountUpTimer(var startTime: Date = Date()) {
         private set
 
     fun start() {
+        stop()
         handler.postDelayed(runnable, 1000)
     }
 
@@ -44,7 +45,13 @@ class CountUpTimer(var startTime: Date = Date()) {
 
     fun reset() {
         startTime = Date()
+        time = 0
         onTickListener?.onTick(getTimerString())
+    }
+
+    fun setNewStartTime(newStartTime:Date){
+        startTime = newStartTime
+        catchUp()
     }
 
     // When the program restart from the background

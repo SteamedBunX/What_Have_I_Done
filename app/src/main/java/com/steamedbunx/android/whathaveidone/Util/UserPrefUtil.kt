@@ -1,9 +1,7 @@
 package com.steamedbunx.android.whathaveidone.Util
 
 import android.content.Context
-import android.util.Log
 import com.steamedbunx.android.whathaveidone.R
-import com.steamedbunx.android.whathaveidone.TAG
 import com.steamedbunx.android.whathaveidone.dataModel.TaskModel
 import java.util.*
 
@@ -36,7 +34,6 @@ class UserPrefUtil private constructor(){
             val taskName = this?.getString(context?.getString(R.string.current_task_name),"Nothing")
             val taskTimeStart = this?.getLong(context?.getString(R.string.current_task_time_start), Date().time)
 
-            Log.i(TAG,"Data Loaded: Name:${taskName}, StartTime${taskTimeStart}")
 
             return TaskModel(taskName?: "Nothing" ,Date(taskTimeStart ?: Date().time) )
         }

@@ -35,18 +35,18 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun loadLastTask(){
         val lastTask = prefUtil.getLastTask(getApplication<Application>().applicationContext)
-        timer.startTime = lastTask.taskTimeStart
+        timer.setNewStartTime(lastTask.taskTimeStart)
         _currentTask.value = lastTask.taskName
-
+        updateTimeString(timer.getTimerString())
     }
 
     fun changeTask(taskName: String): Boolean{
         if(taskName != currentTask.value
             && !taskName.isBlank()) {
-            storeTaskToLog()
             _currentTask.value = taskName
             timer.reset()
-            Log.i(TAG, "Data Stored: Name: $taskName, Time:${timer.startTime.time}")
+            updateTimeString(timer.getTimerString())
+            storeTaskToLog()
             prefUtil.storeLastTask(getApplication(),taskName, timer.startTime)
             return true
         }

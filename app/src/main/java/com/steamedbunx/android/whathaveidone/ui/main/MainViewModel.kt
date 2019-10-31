@@ -1,23 +1,21 @@
 package com.steamedbunx.android.whathaveidone.ui.main
 
-import android.app.Activity
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.steamedbunx.android.whathaveidone.MainActivity
+import com.steamedbunx.android.whathaveidone.TAG
 import com.steamedbunx.android.whathaveidone.Util.CountUpTimer
 import com.steamedbunx.android.whathaveidone.Util.UserPrefUtil
-import com.steamedbunx.android.whathaveidone.dataModel.TaskModel
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
 
-    val prefUtil = UserPrefUtil.getInstence()
+    private val prefUtil = UserPrefUtil.getInstance()
 
     val timer:CountUpTimer = CountUpTimer()
 
-    private val  _currentTask: MutableLiveData<String> = MutableLiveData<String>("Nothing")
+    private val  _currentTask: MutableLiveData<String> = MutableLiveData<String>()
     val currentTask:LiveData<String>
         get() = _currentTask
 
@@ -32,14 +30,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             }
         }
         timer.onTickListener = timerListner
+        loadLastTask()
     }
-
-
 
     fun loadLastTask(){
         val lastTask = prefUtil.getLastTask(getApplication<Application>().applicationContext)
-        timer.startTime = lastTask.taskStartTime
+        timer.startTime = lastTask.taskTimeStart
         _currentTask.value = lastTask.taskName
+
     }
 
     fun changeTask(taskName: String): Boolean{
@@ -48,6 +46,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             storeTaskToLog()
             _currentTask.value = taskName
             timer.reset()
+            Log.i(TAG, "Data Stored: Name: $taskName, Time:${timer.startTime.time}")
+            prefUtil.storeLastTask(getApplication(),taskName, timer.startTime)
             return true
         }
         return false

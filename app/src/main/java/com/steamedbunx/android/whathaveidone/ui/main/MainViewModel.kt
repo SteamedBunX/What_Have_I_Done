@@ -1,13 +1,13 @@
 package com.steamedbunx.android.whathaveidone.ui.main
 
 import android.app.Application
-import android.util.Log
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.steamedbunx.android.whathaveidone.TAG
-import com.steamedbunx.android.whathaveidone.Util.CountUpTimer
-import com.steamedbunx.android.whathaveidone.Util.UserPrefUtil
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.steamedbunx.android.whathaveidone.util.CountUpTimer
+import com.steamedbunx.android.whathaveidone.util.UserPrefUtil
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -15,13 +15,18 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     val timer:CountUpTimer = CountUpTimer()
 
-    private val  _currentTask: MutableLiveData<String> = MutableLiveData<String>()
+    private val  _currentTask = MutableLiveData<String>()
     val currentTask:LiveData<String>
         get() = _currentTask
 
-    private val _currentTimeString: MutableLiveData<String> = MutableLiveData<String>("00:00:00")
+    private val _currentTimeString = MutableLiveData<String>("00:00:00")
     val currentTimeString:LiveData<String>
         get() = _currentTimeString
+
+    private val _isBottomSheetVisible = MutableLiveData<Boolean>(false)
+    val isBottomSheetVisible:LiveData<Boolean>
+        get() = _isBottomSheetVisible
+
 
     init{
         val timerListner = object: CountUpTimer.OnTickListener{
@@ -65,4 +70,21 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     //endregion
 
+    //region lifecycle
+    fun onResume(){
+        timer.onResume()
+    }
+
+    fun onPause(){
+        timer.onPause()
+    }
+    //endregion
+
+    fun setBottomSheetVisible(){
+        _isBottomSheetVisible.value = true
+    }
+
+    fun setBottomSheetHidden(){
+        _isBottomSheetVisible.value = false
+    }
 }

@@ -1,4 +1,4 @@
-package com.steamedbunx.android.whathaveidone.Util
+package com.steamedbunx.android.whathaveidone.util
 
 import android.os.Handler
 import com.steamedbunx.android.whathaveidone.Utils
@@ -8,16 +8,12 @@ import java.util.*
 class CountUpTimer(var startTime: Date = Date()) {
 
     var onTickListener: OnTickListener? = null
-    val utils = Utils.getInstence()
-
-    init {
-        startTime = startTime
-    }
+    private val utils = Utils.getInstence()
 
     // region runnable object
     // create
     val handler = Handler()
-    val runnable: Runnable = object : Runnable {
+    private val runnable: Runnable = object : Runnable {
         override fun run() {
             tick()
             handler.postDelayed(this, 1000)
@@ -26,8 +22,7 @@ class CountUpTimer(var startTime: Date = Date()) {
     // endregion
 
     // region timer controls
-    var time = 0
-        private set
+    private var time = 0
 
     fun start() {
         stop()
@@ -66,8 +61,7 @@ class CountUpTimer(var startTime: Date = Date()) {
 
     // endregion
 
-    // region return informations
-
+    // region get information
     fun getTimerString(): String {
         return utils.getTimerString(time)
     }
@@ -83,7 +77,21 @@ class CountUpTimer(var startTime: Date = Date()) {
     }
     // endregion
 
+    // region lifecycle
+    fun onResume(){
+        catchUp()
+        start()
+    }
+
+    fun onPause() {
+        stop()
+    }
+    // endregion
+
+    // region interface
+
     interface OnTickListener {
         fun onTick(timeString: String)
     }
+    // endregion
 }

@@ -1,4 +1,4 @@
-package com.steamedbunx.android.whathaveidone.Util
+package com.steamedbunx.android.whathaveidone.util
 
 import android.content.Context
 import com.steamedbunx.android.whathaveidone.R

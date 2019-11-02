@@ -27,6 +27,7 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
             : super(context, attrs, defStyleAttr)
 
     init {
+        setOnClickListener {}
         setOnTouchListener(this)
     }
 
@@ -34,7 +35,8 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
     private val CLICK_DRAG_TOLERANCE = 15f
     // keep track of the original position so it can go back to it when button is released
     private var ogX = 0f
-    private var ogY= 0f
+    private var ogY = 0f
+    private var positionSet = false
 
     private var downRawX = 0f
     private var downRawY = 0f
@@ -51,15 +53,18 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
         customListener = customDraggableFloatingActionButtonListener
     }
 
-    fun setFarRelease(y: Float){
+    fun setFarRelease(y: Float) {
         farReleaseY = y
     }
 
     // when it's drawn, get the original position
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        ogX = x
-        ogY = y
+        if (!positionSet) {
+            ogX = x
+            ogY = y
+            positionSet = true
+        }
     }
 
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
@@ -127,7 +132,7 @@ class DraggableFloatingActionButton : FloatingActionButton, View.OnTouchListener
 
             if (abs(upDX) < CLICK_DRAG_TOLERANCE && abs(upDY) < CLICK_DRAG_TOLERANCE) { // A click
                 restoreLocation(view)
-                performClick()
+                customListener?.onClick()
             } else {
                 Log.i(TAG, "updy = $upDY , farReleaseY = $farReleaseY")
                 if (-upDY > farReleaseY) {
@@ -156,4 +161,5 @@ interface CustomDraggableFloatingActionButtonListener {
     fun onYMove(yDelta: Float)
     fun onNearRelease()
     fun onFarRelease()
+    fun onClick()
 }

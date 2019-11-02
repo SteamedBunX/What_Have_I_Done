@@ -6,127 +6,158 @@
     <data>
 
     </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
-        android:layout_width="match_parent"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_height="match_parent"
-        android:background="@drawable/gradient"
-        tools:context=".ui.main.MainFragment">
+        android:layout_width="match_parent">
 
-        <TextView
-            android:id="@+id/text_timer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextWhite"
-            android:textSize="160sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/guideline2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.499"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_current_task"
-            tools:text="00:12:00" />
-
-        <TextView
-            android:id="@+id/text_current_task"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextWhite"
-            android:textSize="80dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/text_timer"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            tools:text="Nothing" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.20" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.6" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CURRENTLY DOING"
-            android:textColor="@color/colorTextWhite"
-            android:textSize="76sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/text_current_task"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-        <ImageView
-            android:id="@+id/black_overlay"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layer_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0"
-            android:background="@drawable/night_sky"
-            android:contentDescription="night_sky"
-            android:foreground="@drawable/night_sky"
-            android:scaleType="fitXY"
-            android:src="@android:color/black"
+            android:background="@drawable/gradient"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/night_sky"
-            tools:alpha="100"
-            tools:visibility="gone" />
+            tools:context=".ui.main.MainFragment">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:clickable="true"
-            android:src="@drawable/ic_description"
-            app:backgroundTint="@color/color_floating"
-            app:fabCustomSize="100dp"
-            app:layout_constraintBottom_toBottomOf="@+id/fab_change_task"
-            app:layout_constraintEnd_toStartOf="@+id/fab_change_task"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:maxImageSize="80dp" />
+            <TextView
+                android:id="@+id/text_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextWhite"
+                android:textSize="160sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/guideline2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.499"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_current_task"
+                tools:text="00:12:00" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:clickable="true"
-            android:src="@drawable/ic_alarm_add"
-            app:backgroundTint="@color/color_floating"
-            app:fabCustomSize="100dp"
-            app:layout_constraintBottom_toBottomOf="@+id/fab_change_task"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/fab_change_task"
-            app:maxImageSize="80dp" />
+            <TextView
+                android:id="@+id/text_current_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextWhite"
+                android:textSize="80dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/text_timer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                tools:text="Nothing" />
 
-        <com.steamedbunx.android.whathaveidone.widget.DraggableFloatingActionButton
-            android:id="@+id/fab_change_task"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ic_change_task"
-            app:backgroundTint="@color/color_floating"
-            app:fabCustomSize="150dp"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.20" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.6" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CURRENTLY DOING"
+                android:textColor="@color/colorTextWhite"
+                android:textSize="76sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/text_current_task"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_show_today_log"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="75dp"
+                android:clickable="true"
+                android:src="@drawable/ic_description"
+                app:backgroundTint="@color/color_floating"
+                app:fabCustomSize="100dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/fab_setup_alarm"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:maxImageSize="80dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_setup_alarm"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="200dp"
+                android:layout_marginBottom="75dp"
+                android:clickable="true"
+                android:src="@drawable/ic_alarm_add"
+                app:backgroundTint="@color/color_floating"
+                app:fabCustomSize="100dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/fab_show_today_log"
+                app:maxImageSize="80dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layer_new_task_transition"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/floatingActionButton2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
-            app:layout_constraintTop_toTopOf="@+id/guideline2"
-            app:maxImageSize="100dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.steamedbunx.android.whathaveidone.widget.DraggableFloatingActionButton
+                android:id="@+id/fab_change_task"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginBottom="50dp"
+                android:src="@drawable/ic_change_task"
+                app:backgroundTint="@color/color_floating"
+                app:fabCustomSize="150dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:maxImageSize="100dp" />
+
+            <ImageView
+                android:id="@+id/black_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0"
+                android:background="@drawable/night_sky"
+                android:contentDescription="night_sky"
+                android:foreground="@drawable/night_sky"
+                android:scaleType="fitXY"
+                android:src="@android:color/black"
+                app:srcCompat="@drawable/night_sky"
+                tools:alpha="100"
+                tools:visibility="gone" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layer_bottom_sheet_log_today"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:alpha="0.8"
+            android:background="@drawable/rounded_corner_today_log_bottom_sheet"
+            app:behavior_hideable="true"
+            app:behavior_skipCollapsed="true"
+            app:layout_behavior="@string/bottom_sheet_behavior"
+            app:layout_constraintBottom_toBottomOf="@+id/layer_main">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

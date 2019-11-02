@@ -5,4 +5,7 @@
     <color name="colorAccent">#2A5F80</color>
     <color name="colorTextWhite">#FFFFFF</color>
     <color name="color_floating">#3E8CA9</color>
+    <color name="color_floating_80a">#CC3E8CA9</color>
+    <color name="color_floating_bright">#4EB3CB</color>
 </resources>
+

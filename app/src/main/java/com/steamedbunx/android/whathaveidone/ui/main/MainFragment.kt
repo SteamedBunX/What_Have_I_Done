@@ -35,6 +35,7 @@ class MainFragment : Fragment() {
 
     // endregion
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,9 +50,10 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         navController = requireView().findNavController()
+        initTextGroupAnimationDestinationYs()
         setupViewModel()
-        setupListeners()
         setupBottomSheet()
+        setupListeners()
         setupCustomFab()
         setupObservers()
     }
@@ -67,18 +69,24 @@ class MainFragment : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.layerBottomSheetLogToday)
         bottomSheetBehavior.setBottomSheetCallback(
             object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onSlide(p0: View, p1: Float) {
-
+                override fun onSlide(bottomShee: View, slideOffset: Float) {
+                    if(slideOffset.isNaN()) {
+                        setTextGroupY(1f)
+                    }
+                    else{
+                        setTextGroupY(1 + (slideOffset))
+                    }
                 }
 
-                override fun onStateChanged(p0: View, p1: Int) {
-                    if (p1 == BottomSheetBehavior.STATE_HIDDEN) {
+                override fun onStateChanged(bottomShee: View, newState: Int) {
+                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                         viewModel.setBottomSheetHidden()
-                    } else if (p1 == BottomSheetBehavior.STATE_EXPANDED) {
+                    } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                         viewModel.setBottomSheetVisible()
                     }
                 }
             })
+
     }
 
 
@@ -86,6 +94,9 @@ class MainFragment : Fragment() {
         binding.fabChangeTask.setCustomListener(customDFABListener)
         binding.fabShowTodayLog.setOnClickListener {
             viewModel.setBottomSheetVisible()
+        }
+        binding.buttonMinimizeLog.setOnClickListener {
+            viewModel.setBottomSheetHidden()
         }
     }
 
@@ -106,14 +117,16 @@ class MainFragment : Fragment() {
         viewModel.isBottomSheetVisible.observe(this, Observer {
             bottomSheetBehavior.state =
                 if (it) {
+                    elevateTextGroupY()
+                    hideFabs()
                     BottomSheetBehavior.STATE_EXPANDED
                 } else {
+                    restoreFabs()
                     BottomSheetBehavior.STATE_HIDDEN
                 }
         })
     }
-// endregion
-
+    // endregion
 
     //region Listeners
     private val customDFABListener: CustomDraggableFloatingActionButtonListener =
@@ -137,7 +150,7 @@ class MainFragment : Fragment() {
             }
 
         }
-//endregion
+    //endregion
 
     //region animation
     fun setOverlayAlpha(alpha: Float) {
@@ -154,7 +167,76 @@ class MainFragment : Fragment() {
             .setDuration(500)
             .start()
     }
-//endregion
+
+    var textGroupOgY = 0f
+    var textGroupElevatedYDelta = 0f
+
+    // region textGroup
+    fun initTextGroupAnimationDestinationYs(){
+        val displayMetrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+        textGroupOgY = (displayMetrics.heightPixels) * 0.2f
+        textGroupElevatedYDelta = (displayMetrics.heightPixels) * 0.15f
+    }
+
+    fun setTextGroupY(offset: Float) {
+        binding.layerTexts.animate()
+            .y(textGroupOgY - textGroupElevatedYDelta * offset)
+            .setDuration(0)
+            .start()
+    }
+
+    fun elevateTextGroupY(){
+        binding.layerTexts.animate()
+            .y(textGroupOgY - textGroupElevatedYDelta)
+            .setDuration(200)
+            .start()
+    }
+    // endregion
+
+    // region fabs
+
+    fun restoreFabs(){
+        binding.fabShowTodayLog
+            .animate()
+            .alpha(1f)
+            .setDuration(500)
+            .start()
+        binding.fabChangeTask
+            .animate()
+            .alpha(1f)
+            .setDuration(500)
+            .setStartDelay(150)
+            .start()
+        binding.fabSetupAlarm
+            .animate()
+            .alpha(1f)
+            .setDuration(500)
+            .setStartDelay(300)
+            .start()
+    }
+
+    fun hideFabs(){
+        binding.fabShowTodayLog
+            .animate()
+            .alpha(0f)
+            .setDuration(500)
+            .start()
+        binding.fabChangeTask
+            .animate()
+            .alpha(0f)
+            .setDuration(500)
+            .setStartDelay(150)
+            .start()
+        binding.fabSetupAlarm
+            .animate()
+            .alpha(0f)
+            .setDuration(500)
+            .setStartDelay(300)
+            .start()
+    }
+
+    // endregion
 
     // region lifecycle
     override fun onResume() {
@@ -166,6 +248,6 @@ class MainFragment : Fragment() {
         super.onPause()
         viewModel.onPause()
     }
-// endregion
+    // endregion
 
 }

@@ -13,23 +13,22 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private val prefUtil = UserPrefUtil.getInstance()
 
-    val timer:CountUpTimer = CountUpTimer()
+    val timer: CountUpTimer = CountUpTimer()
 
-    private val  _currentTask = MutableLiveData<String>()
-    val currentTask:LiveData<String>
+    private val _currentTask = MutableLiveData<String>()
+    val currentTask: LiveData<String>
         get() = _currentTask
 
     private val _currentTimeString = MutableLiveData<String>("00:00:00")
-    val currentTimeString:LiveData<String>
+    val currentTimeString: LiveData<String>
         get() = _currentTimeString
 
     private val _isBottomSheetVisible = MutableLiveData<Boolean>(false)
-    val isBottomSheetVisible:LiveData<Boolean>
+    val isBottomSheetVisible: LiveData<Boolean>
         get() = _isBottomSheetVisible
 
-
-    init{
-        val timerListner = object: CountUpTimer.OnTickListener{
+    init {
+        val timerListner = object : CountUpTimer.OnTickListener {
             override fun onTick(timeString: String) {
                 updateTimeString(timeString)
             }
@@ -38,31 +37,32 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         loadLastTask()
     }
 
-    fun loadLastTask(){
+    fun loadLastTask() {
         val lastTask = prefUtil.getLastTask(getApplication<Application>().applicationContext)
         timer.setNewStartTime(lastTask.taskTimeStart)
         _currentTask.value = lastTask.taskName
         updateTimeString(timer.getTimerString())
     }
 
-    fun changeTask(taskName: String): Boolean{
-        if(taskName != currentTask.value
-            && !taskName.isBlank()) {
+    fun changeTask(taskName: String): Boolean {
+        if (taskName != currentTask.value
+            && !taskName.isBlank()
+        ) {
             _currentTask.value = taskName
             timer.reset()
             updateTimeString(timer.getTimerString())
             storeTaskToLog()
-            prefUtil.storeLastTask(getApplication(),taskName, timer.startTime)
+            prefUtil.storeLastTask(getApplication(), taskName, timer.startTime)
             return true
         }
         return false
     }
 
-    fun storeTaskToLog(){
+    fun storeTaskToLog() {
 
     }
 
-    fun updateTimeString(timeString: String){
+    fun updateTimeString(timeString: String) {
         _currentTimeString.value = timeString
     }
 
@@ -71,20 +71,25 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     //endregion
 
     //region lifecycle
-    fun onResume(){
+    fun onResume() {
         timer.onResume()
     }
 
-    fun onPause(){
+    fun onPause() {
         timer.onPause()
     }
     //endregion
 
-    fun setBottomSheetVisible(){
-        _isBottomSheetVisible.value = true
+    fun setBottomSheetVisible() {
+        if (_isBottomSheetVisible.value == false) {
+            _isBottomSheetVisible.value = true
+        }
     }
 
-    fun setBottomSheetHidden(){
-        _isBottomSheetVisible.value = false
+    fun setBottomSheetHidden() {
+        if (_isBottomSheetVisible.value == true) {
+            _isBottomSheetVisible.value = false
+        }
     }
+
 }

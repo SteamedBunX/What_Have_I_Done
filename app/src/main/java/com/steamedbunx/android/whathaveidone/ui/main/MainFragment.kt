@@ -118,10 +118,8 @@ class MainFragment : Fragment() {
             bottomSheetBehavior.state =
                 if (it) {
                     elevateTextGroupY()
-                    hideFabs()
                     BottomSheetBehavior.STATE_EXPANDED
                 } else {
-                    restoreFabs()
                     BottomSheetBehavior.STATE_HIDDEN
                 }
         })
@@ -196,45 +194,6 @@ class MainFragment : Fragment() {
 
     // region fabs
 
-    fun restoreFabs(){
-        binding.fabShowTodayLog
-            .animate()
-            .alpha(1f)
-            .setDuration(500)
-            .start()
-        binding.fabChangeTask
-            .animate()
-            .alpha(1f)
-            .setDuration(500)
-            .setStartDelay(150)
-            .start()
-        binding.fabSetupAlarm
-            .animate()
-            .alpha(1f)
-            .setDuration(500)
-            .setStartDelay(300)
-            .start()
-    }
-
-    fun hideFabs(){
-        binding.fabShowTodayLog
-            .animate()
-            .alpha(0f)
-            .setDuration(500)
-            .start()
-        binding.fabChangeTask
-            .animate()
-            .alpha(0f)
-            .setDuration(500)
-            .setStartDelay(150)
-            .start()
-        binding.fabSetupAlarm
-            .animate()
-            .alpha(0f)
-            .setDuration(500)
-            .setStartDelay(300)
-            .start()
-    }
 
     // endregion
 

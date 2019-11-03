@@ -35,7 +35,6 @@ class MainFragment : Fragment() {
 
     // endregion
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -192,10 +191,7 @@ class MainFragment : Fragment() {
     }
     // endregion
 
-    // region fabs
-
-
-    // endregion
+    //endregion
 
     // region lifecycle
     override fun onResume() {

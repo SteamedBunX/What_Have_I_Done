@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.steamedbunx.android.whathaveidone.database.TaskRecord
 import com.steamedbunx.android.whathaveidone.util.CountUpTimer
 import com.steamedbunx.android.whathaveidone.util.UserPrefUtil
 
@@ -26,6 +27,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val _isBottomSheetVisible = MutableLiveData<Boolean>(false)
     val isBottomSheetVisible: LiveData<Boolean>
         get() = _isBottomSheetVisible
+
+    private val _taskRecordList = MutableLiveData<List<TaskRecord>>()
+    val taskRecordList:LiveData<List<TaskRecord>>
+        get() = _taskRecordList
 
     init {
         val timerListner = object : CountUpTimer.OnTickListener {
@@ -90,6 +95,27 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         if (_isBottomSheetVisible.value == true) {
             _isBottomSheetVisible.value = false
         }
+    }
+
+
+    fun createFakeList(){
+        var taskTaskrecords = ArrayList<TaskRecord>()
+        taskTaskrecords.add(TaskRecord(
+            0,"tasl2",2343463L,142345
+        ))
+        taskTaskrecords.add(TaskRecord(
+            1,"tasl1",2343463L,142345
+        ))
+        taskTaskrecords.add(TaskRecord(
+            2,"tasl5",2343463L,142345
+        ))
+        taskTaskrecords.add(TaskRecord(
+            3,"tasl3",2343463L,142345
+        ))
+        taskTaskrecords.add(TaskRecord(
+            4,"tasl4",2343463L,142345
+        ))
+        _taskRecordList.value = taskTaskrecords
     }
 
 }

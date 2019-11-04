@@ -12,11 +12,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.steamedbunx.android.whathaveidone.MainViewModelFactory
 import com.steamedbunx.android.whathaveidone.R
 import com.steamedbunx.android.whathaveidone.databinding.MainFragmentBinding
 import com.steamedbunx.android.whathaveidone.widget.CustomDraggableFloatingActionButtonListener
+import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment() {
 
@@ -26,8 +29,13 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
+    //region lateinit
+
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
+    private lateinit var taskRecordAdapter: TaskRecordAdapter
+
+    //endregion
 
     // region view state
 
@@ -51,10 +59,19 @@ class MainFragment : Fragment() {
         navController = requireView().findNavController()
         initTextGroupAnimationDestinationYs()
         setupViewModel()
+        setupRecyclerView()
         setupBottomSheet()
         setupListeners()
         setupCustomFab()
         setupObservers()
+    }
+
+    private fun setupRecyclerView() {
+        taskRecordAdapter = TaskRecordAdapter()
+        binding.recyclerView.apply{
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            adapter = taskRecordAdapter
+        }
     }
 
     private fun setupCustomFab() {
@@ -104,6 +121,7 @@ class MainFragment : Fragment() {
         viewModel = requireActivity().run {
             ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
         }
+        viewModel.createFakeList()
     }
 
     private fun setupObservers() {
@@ -121,6 +139,9 @@ class MainFragment : Fragment() {
                 } else {
                     BottomSheetBehavior.STATE_HIDDEN
                 }
+        })
+        viewModel.taskRecordList.observe(this, Observer {
+            taskRecordAdapter.submitList(it)
         })
     }
     // endregion

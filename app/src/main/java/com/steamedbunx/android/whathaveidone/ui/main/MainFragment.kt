@@ -3,6 +3,7 @@ package com.steamedbunx.android.whathaveidone.ui.main
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +18,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.steamedbunx.android.whathaveidone.MainViewModelFactory
 import com.steamedbunx.android.whathaveidone.R
+import com.steamedbunx.android.whathaveidone.TAG
+import com.steamedbunx.android.whathaveidone.database.TaskDatabase
 import com.steamedbunx.android.whathaveidone.databinding.MainFragmentBinding
 import com.steamedbunx.android.whathaveidone.widget.CustomDraggableFloatingActionButtonListener
-import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment() {
 
@@ -42,6 +44,7 @@ class MainFragment : Fragment() {
     lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     // endregion
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -114,14 +117,17 @@ class MainFragment : Fragment() {
         binding.buttonMinimizeLog.setOnClickListener {
             viewModel.setBottomSheetHidden()
         }
+        binding.buttonChangeDisplayMode.setOnClickListener{
+            viewModel.changeRecordDisplayMode()
+        }
     }
 
     private fun setupViewModel() {
-        val factory = MainViewModelFactory(requireActivity().application)
+        val dataSource = TaskDatabase.getInstance(requireActivity().application).taskDatabaseDao
+        val factory = MainViewModelFactory(dataSource, requireActivity().application)
         viewModel = requireActivity().run {
             ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
         }
-        viewModel.createFakeList()
     }
 
     private fun setupObservers() {
@@ -135,12 +141,16 @@ class MainFragment : Fragment() {
             bottomSheetBehavior.state =
                 if (it) {
                     elevateTextGroupY()
+                    viewModel.updateRecordListDisplay()
                     BottomSheetBehavior.STATE_EXPANDED
                 } else {
                     BottomSheetBehavior.STATE_HIDDEN
                 }
         })
-        viewModel.taskRecordList.observe(this, Observer {
+        viewModel.liveRecordListToday.observe(this, Observer {
+            viewModel.updateRecordListDisplay()
+        })
+        viewModel.taskRecordListForDisplay.observe(this, Observer {
             taskRecordAdapter.submitList(it)
         })
     }

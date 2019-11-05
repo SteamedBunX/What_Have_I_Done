@@ -147,9 +147,6 @@ class MainFragment : Fragment() {
                     BottomSheetBehavior.STATE_HIDDEN
                 }
         })
-        viewModel.liveRecordListToday.observe(this, Observer {
-            viewModel.updateRecordListDisplay()
-        })
         viewModel.taskRecordListForDisplay.observe(this, Observer {
             taskRecordAdapter.submitList(it)
         })

@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
 
     //data binding
-    kapt 'androidx.databinding:databinding-compiler-common:3.5.1'
+    kapt 'androidx.databinding:databinding-compiler-common:3.5.2'
 
     //navigation
     implementation "androidx.navigation:navigation-fragment-ktx:2.1.0"

@@ -33,6 +33,8 @@ class MainViewModel(
 
     private val prefUtil = UserPrefUtil.getInstance()
     val timer: CountUpTimer = CountUpTimer()
+    var todayRecordSeparate = listOf(TaskRecord())
+    var todayRecordCombined = listOf(TaskRecord())
 
     //region livedata
 
@@ -48,7 +50,8 @@ class MainViewModel(
     val isBottomSheetVisible: LiveData<Boolean>
         get() = _isBottomSheetVisible
 
-    private val _taskRecordDisplayMode = MutableLiveData<RecordDisplayMode>(RecordDisplayMode.SEPARATED_BY_TIME)
+    private val _taskRecordDisplayMode =
+        MutableLiveData<RecordDisplayMode>(RecordDisplayMode.SEPARATED_BY_TIME)
     val taskRecordDisplayMode: LiveData<RecordDisplayMode>
         get() = _taskRecordDisplayMode
 
@@ -56,16 +59,11 @@ class MainViewModel(
     val taskRecordListForDisplay: LiveData<List<TaskRecord>>
         get() = _taskRecordListForDisplay
 
-    private var taskRecordListCombined:List<TaskRecord> = emptyList()
-
-    val liveRecordListToday = database
-        .getRecordWithinDateRange(getFirstSecondOfToday(), getLastSecondOfToday())
-
     //endregion
 
     //region Database
 
-    fun getFirstSecondOfToday():Long{
+    fun getFirstSecondOfToday(): Long {
         val cal = Calendar.getInstance()
         cal.timeInMillis = Date().time
         cal.set(Calendar.HOUR_OF_DAY, 0) //set hours to zero
@@ -74,7 +72,7 @@ class MainViewModel(
         return cal.timeInMillis
     }
 
-    fun getLastSecondOfToday():Long{
+    fun getLastSecondOfToday(): Long {
         val cal = Calendar.getInstance()
         cal.timeInMillis = Date().time
         cal.set(Calendar.HOUR_OF_DAY, 0) //set hours to zero
@@ -95,6 +93,7 @@ class MainViewModel(
         }
         timer.onTickListener = timerListner
         loadLastTask()
+        loadTodayRecord()
     }
 
     fun loadLastTask() {
@@ -119,15 +118,22 @@ class MainViewModel(
     }
 
     fun storeTaskToLog() {
-        val name=currentTask.value ?: ""
+        val name = currentTask.value ?: ""
         val date = timer.startTime.time
         val length = timer.getTotalRunTime()
-        uiScope.launch{
-        withContext(Dispatchers.IO) {
-            database.insert(TaskRecord(name=name,
-                date = date,
-                length = length))
-        }}
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                database.insert(
+                    TaskRecord(
+                        name = name,
+                        date = date,
+                        length = length
+                    )
+                )
+            }
+            updateTodayRecord()
+        }
+
     }
 
     fun updateTimeString(timeString: String) {
@@ -161,8 +167,8 @@ class MainViewModel(
         }
     }
 
-    fun changeRecordDisplayMode(){
-        when(taskRecordDisplayMode.value){
+    fun changeRecordDisplayMode() {
+        when (taskRecordDisplayMode.value) {
             RecordDisplayMode.SEPARATED_BY_TIME ->
                 _taskRecordDisplayMode.value = RecordDisplayMode.SEPARATED_BY_LENGTH
             RecordDisplayMode.SEPARATED_BY_LENGTH ->
@@ -175,9 +181,8 @@ class MainViewModel(
         updateRecordListDisplay()
     }
 
-    fun updateRecordListDisplay(){
-        updateCombinedList()
-        when(taskRecordDisplayMode.value){
+    fun updateRecordListDisplay() {
+        when (taskRecordDisplayMode.value) {
             RecordDisplayMode.SEPARATED_BY_TIME -> loadListSeparatedByTime()
             RecordDisplayMode.SEPARATED_BY_LENGTH -> loadListSeperatedByLength()
             RecordDisplayMode.COMBINED_BY_TIME -> loadListCombinedByTime()
@@ -189,37 +194,60 @@ class MainViewModel(
 
     }
 
-    fun updateCombinedList(){
+    suspend fun getCombinedList(): List<TaskRecord> {
         val result = ArrayList<TaskRecord>()
-        liveRecordListToday.value?.forEach { item ->
-            val position = result.indexOfFirst{ it.name == item.name}
-            if(position == -1)
-            {
-                result.add(item)
-            }else{
-                result[position].length = result[position].length + item.length
-                result[position].date = max(result[position].date, item.date)
-            }
+        withContext(Dispatchers.IO) {
+            todayRecordSeparate
+                .forEach { item ->
+                    val position = result.indexOfFirst { it.name == item.name }
+                    if (position == -1) {
+                        result.add(item)
+                    } else {
+                        result[position].length = result[position].length + item.length
+                        result[position].date = max(result[position].date, item.date)
+                    }
+                }
         }
-        taskRecordListCombined = result
+        return result.toList()
     }
 
-    fun loadListSeparatedByTime(){
-        _taskRecordListForDisplay.value = liveRecordListToday.value?.sortedBy { it.date }
+    fun loadTodayRecord() {
+        uiScope.launch {
+            updateTodayRecord()
+        }
     }
 
-    fun loadListSeperatedByLength(){
-        _taskRecordListForDisplay.value = liveRecordListToday.value?.sortedBy { it.length }
+    private suspend fun updateTodayRecord() {
+        withContext(Dispatchers.IO) {
+            todayRecordSeparate = database
+                .getRecordWithinDateRange(getFirstSecondOfToday(), getLastSecondOfToday())
+            todayRecordCombined = getCombinedList()
+        }
     }
 
-    fun loadListCombinedByTime(){
-        _taskRecordListForDisplay.value = taskRecordListCombined.sortedBy { it.date }
+    fun loadListSeparatedByTime() {
+        uiScope.launch {
+            _taskRecordListForDisplay.value = todayRecordSeparate.sortedBy { it.date }
+        }
     }
 
-    fun loadListCombinedByLength(){
-        _taskRecordListForDisplay.value = taskRecordListCombined.sortedBy { it.length }
+    fun loadListSeperatedByLength() {
+        uiScope.launch {
+            _taskRecordListForDisplay.value = todayRecordSeparate.sortedBy { it.length }
+        }
     }
 
+    fun loadListCombinedByTime() {
+        uiScope.launch {
+            _taskRecordListForDisplay.value = todayRecordCombined.sortedBy { it.date }
+        }
+    }
+
+    fun loadListCombinedByLength() {
+        uiScope.launch {
+            _taskRecordListForDisplay.value = todayRecordCombined.sortedBy { it.length }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()

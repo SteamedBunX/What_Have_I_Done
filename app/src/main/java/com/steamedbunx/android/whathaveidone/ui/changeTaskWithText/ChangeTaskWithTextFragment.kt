@@ -57,7 +57,7 @@ class ChangeTaskWithTextFragment : DialogFragment() {
         return object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 tryChangeTask(v?.text.toString())
-                return true
+                return false
             }
         }
     }

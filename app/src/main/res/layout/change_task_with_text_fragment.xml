@@ -35,12 +35,12 @@
             android:background="@drawable/rounded_corner_text_edit"
             android:ems="10"
             android:hint="Enter Your Next Task"
-            android:imeOptions="actionSend"
+            android:imeOptions="actionDone"
             android:inputType="textPersonName"
             android:paddingStart="40dp"
             android:paddingEnd="40dp"
             android:textColorHint="@color/colorAccent"
-            android:textSize="36dp" />
+            android:textSize="36sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

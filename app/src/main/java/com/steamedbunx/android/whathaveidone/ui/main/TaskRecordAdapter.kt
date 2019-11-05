@@ -32,6 +32,7 @@ class TaskRecordAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun submitList(newList: List<TaskRecord>){
         items = newList
+        notifyDataSetChanged()
     }
 
     class TaskRecordViewHolder constructor(itemView: View)

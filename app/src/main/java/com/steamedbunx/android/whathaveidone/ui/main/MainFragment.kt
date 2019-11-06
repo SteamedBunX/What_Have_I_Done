@@ -1,11 +1,13 @@
 package com.steamedbunx.android.whathaveidone.ui.main
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -71,7 +73,7 @@ class MainFragment : Fragment() {
 
     private fun setupRecyclerView() {
         taskRecordAdapter = TaskRecordAdapter()
-        binding.recyclerView.apply{
+        binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = taskRecordAdapter
         }
@@ -84,15 +86,15 @@ class MainFragment : Fragment() {
         binding.fabChangeTask.setFarRelease(farReleaseY)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupBottomSheet() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.layerBottomSheetLogToday)
         bottomSheetBehavior.setBottomSheetCallback(
             object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onSlide(bottomShee: View, slideOffset: Float) {
-                    if(slideOffset.isNaN()) {
+                    if (slideOffset.isNaN()) {
                         setTextGroupY(1f)
-                    }
-                    else{
+                    } else {
                         setTextGroupY(1 + (slideOffset))
                     }
                 }
@@ -105,7 +107,6 @@ class MainFragment : Fragment() {
                     }
                 }
             })
-
     }
 
 
@@ -117,7 +118,7 @@ class MainFragment : Fragment() {
         binding.buttonMinimizeLog.setOnClickListener {
             viewModel.setBottomSheetHidden()
         }
-        binding.buttonChangeDisplayMode.setOnClickListener{
+        binding.buttonChangeDisplayMode.setOnClickListener {
             viewModel.changeRecordDisplayMode()
         }
     }
@@ -197,7 +198,7 @@ class MainFragment : Fragment() {
     var textGroupElevatedYDelta = 0f
 
     // region textGroup
-    fun initTextGroupAnimationDestinationYs(){
+    fun initTextGroupAnimationDestinationYs() {
         val displayMetrics = DisplayMetrics()
         requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
         textGroupOgY = (displayMetrics.heightPixels) * 0.2f
@@ -211,7 +212,7 @@ class MainFragment : Fragment() {
             .start()
     }
 
-    fun elevateTextGroupY(){
+    fun elevateTextGroupY() {
         binding.layerTexts.animate()
             .y(textGroupOgY - textGroupElevatedYDelta)
             .setDuration(200)

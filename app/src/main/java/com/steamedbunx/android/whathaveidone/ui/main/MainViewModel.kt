@@ -118,22 +118,23 @@ class MainViewModel(
     }
 
     fun storeTaskToLog() {
-        val name = currentTask.value ?: ""
-        val date = timer.startTime.time
-        val length = timer.getTotalRunTime()
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                database.insert(
-                    TaskRecord(
-                        name = name,
-                        date = date,
-                        length = length
+        if (currentTask.value != null && currentTask.value != "" && currentTask.value != "Nothing") {
+            val name = currentTask.value ?: ""
+            val date = timer.startTime.time
+            val length = timer.getTotalRunTime()
+            uiScope.launch {
+                withContext(Dispatchers.IO) {
+                    database.insert(
+                        TaskRecord(
+                            name = name,
+                            date = date,
+                            length = length
+                        )
                     )
-                )
+                }
+                updateTodayRecord()
             }
-            updateTodayRecord()
         }
-
     }
 
     fun updateTimeString(timeString: String) {
@@ -188,10 +189,6 @@ class MainViewModel(
             RecordDisplayMode.COMBINED_BY_TIME -> loadListCombinedByTime()
             RecordDisplayMode.COMBINED_BY_LENGTH -> loadListCombinedByLength()
         }
-        _taskRecordListForDisplay.value?.forEach {
-            Log.i(TAG, "id: ${it.id}, name: ${it.name}, date: ${it.date}, length: ${it.length}")
-        }
-
     }
 
     suspend fun getCombinedList(): List<TaskRecord> {
@@ -201,7 +198,8 @@ class MainViewModel(
                 .forEach { item ->
                     val position = result.indexOfFirst { it.name == item.name }
                     if (position == -1) {
-                        result.add(item)
+                        val newRecord = TaskRecord(item.id, item.name, item.date, item.length)
+                        result.add(newRecord)
                     } else {
                         result[position].length = result[position].length + item.length
                         result[position].date = max(result[position].date, item.date)

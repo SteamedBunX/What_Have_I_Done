@@ -1,15 +1,15 @@
 package com.steamedbunx.android.whathaveidone.ui.main
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -20,9 +20,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.steamedbunx.android.whathaveidone.MainViewModelFactory
 import com.steamedbunx.android.whathaveidone.R
-import com.steamedbunx.android.whathaveidone.TAG
+import com.steamedbunx.android.whathaveidone.RecordDisplayMode
 import com.steamedbunx.android.whathaveidone.database.TaskDatabase
 import com.steamedbunx.android.whathaveidone.databinding.MainFragmentBinding
+import com.steamedbunx.android.whathaveidone.recyclerviewComponent.VerticalSpaceItemDecoration
 import com.steamedbunx.android.whathaveidone.widget.CustomDraggableFloatingActionButtonListener
 
 class MainFragment : Fragment() {
@@ -76,7 +77,10 @@ class MainFragment : Fragment() {
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = taskRecordAdapter
+            val VERTICAL_ITEM_SPACE = 10
+            addItemDecoration(VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE))
         }
+
     }
 
     private fun setupCustomFab() {
@@ -119,7 +123,7 @@ class MainFragment : Fragment() {
             viewModel.setBottomSheetHidden()
         }
         binding.buttonChangeDisplayMode.setOnClickListener {
-            viewModel.changeRecordDisplayMode()
+            showChooseDisplayModeDialog()
         }
     }
 
@@ -219,6 +223,50 @@ class MainFragment : Fragment() {
             .start()
     }
     // endregion
+
+    //endregion
+
+    //region dialog
+    private var currentChoice:Int = 0
+
+    fun showChooseDisplayModeDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        val choices =
+            listOf<CharSequence>(
+                "Separate and Sort by Time", "Separate and Sort by Length",
+                "Combined and Sort by Time", "Combined and Sort by Length"
+            ).toTypedArray()
+        currentChoice = when (viewModel.taskRecordDisplayMode.value) {
+            RecordDisplayMode.SEPARATED_BY_TIME -> 0
+            RecordDisplayMode.SEPARATED_BY_LENGTH -> 1
+            RecordDisplayMode.COMBINED_BY_TIME -> 2
+            RecordDisplayMode.COMBINED_BY_LENGTH -> 3
+            null -> 0
+        }
+        builder.setTitle("Select List Display Mode")
+            .setSingleChoiceItems(choices, currentChoice,
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        currentChoice = which
+                    }
+                })
+            .setPositiveButton("OK",
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        viewModel.setRecordDisplayMode(currentChoice)
+                    }
+
+                })
+            .setNegativeButton("Cancel",
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        viewModel.setRecordDisplayMode(which)
+                    }
+                })
+            .create()
+            .show()
+    }
+
 
     //endregion
 

@@ -15,6 +15,9 @@ interface TaskDatabaseDao {
     @Query("SELECT * from task_log_table WHERE time_start_milli BETWEEN :dateBegin AND :dateEnd")
     fun getRecordWithinDateRange(dateBegin: Long, dateEnd: Long):List<TaskRecord>
 
+    @Query("SELECT * FROM task_log_table")
+    fun getAllRecords():List<TaskRecord>
+
 //    @Query("SELECT name, sum(duration_sec) from task_log_table WHERE time_start_milli BETWEEN :dateBegin AND :dateEnd GROUP BY name" )
 //    suspend fun getCombinedRecordWithinDateRange(dateBegin: Long, dateEnd: Long):LiveData<List<TaskRecord>>
 

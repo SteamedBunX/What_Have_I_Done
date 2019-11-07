@@ -10,11 +10,11 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="10dp"
+        android:elevation="1dp"
         app:cardBackgroundColor="@color/color_floating_bright"
-        app:cardElevation="10dp"
-        app:cardMaxElevation="10dp"
-        app:cardCornerRadius="30dp">
+        app:cardCornerRadius="30dp"
+        app:cardElevation="1dp"
+        app:cardMaxElevation="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -28,9 +28,11 @@
                 android:layout_marginLeft="40dp"
                 android:textColor="@color/colorTextWhite"
                 android:textSize="40sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:text="Nothing"
-                tools:ignore="RtlHardcoded" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlHardcoded"
+                tools:text="Nothing" />
 
             <TextView
                 android:id="@+id/text_task_length"
@@ -40,9 +42,11 @@
                 android:foregroundGravity="right"
                 android:textColor="@color/colorTextWhite"
                 android:textSize="40sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:text="22:22:22"
-                tools:ignore="RtlHardcoded" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlHardcoded"
+                tools:text="22:22:22" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

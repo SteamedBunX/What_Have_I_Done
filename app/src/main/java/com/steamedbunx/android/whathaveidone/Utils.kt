@@ -1,5 +1,7 @@
 package com.steamedbunx.android.whathaveidone
 
+import android.icu.text.SimpleDateFormat
+import android.os.Build
 import java.util.*
 
 class Utils private constructor() {
@@ -12,7 +14,7 @@ class Utils private constructor() {
         }
     }
 
-    fun dateDidNotChange(startTime:Date):Boolean{
+    fun dateDidNotChange(startTime: Date): Boolean {
         val startingDay = Calendar.getInstance()
         startingDay.time = startTime
         val today = Calendar.getInstance()
@@ -22,23 +24,26 @@ class Utils private constructor() {
     }
 
     fun getTimerString(time: Int): String {
-        val hour: Int = time / 3600
+        var _time = if (time < 0) {
+            0
+        } else {
+            time
+        }
+        val hour: Int = _time / 3600
         val hourString: String =
-            if(hour >= 10)
-            {
+            if (hour >= 10) {
                 (hour).toString()
-            } else
-            {
+            } else {
                 "0$hour"
             }
-        val minute: Int = time % 3600 / 60
+        val minute: Int = _time % 3600 / 60
         val minuteString: String =
             if (minute >= 10) {
                 (minute).toString()
             } else {
                 "0$minute"
             }
-        val second = time % 60
+        val second = _time % 60
         val secondString =
             if (second >= 10) {
                 "$second"
@@ -48,5 +53,12 @@ class Utils private constructor() {
         return "$hourString:$minuteString:$secondString"
     }
 
+    fun getDateString(date: Long) :String{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val simpleDate = SimpleDateFormat("yyyy/MM/dd/ HH:mm:ss")
+            return simpleDate.format(Date(date))
+        }
+        return ""
+    }
 
 }

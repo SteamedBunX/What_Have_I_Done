@@ -38,8 +38,8 @@ class TaskRecordAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class TaskRecordViewHolder constructor(itemView: View)
         : RecyclerView.ViewHolder(itemView){
 
-        val taskNameText = itemView.text_task_name
-        val taskLengthText = itemView.text_task_length
+        private val taskNameText = itemView.text_task_name
+        private val taskLengthText = itemView.text_task_length
 
         fun bind(taskRecord: TaskRecord){
             taskNameText.text = taskRecord.name

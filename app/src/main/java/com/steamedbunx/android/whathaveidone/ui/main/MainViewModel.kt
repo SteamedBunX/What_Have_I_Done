@@ -1,13 +1,10 @@
 package com.steamedbunx.android.whathaveidone.ui.main
 
 import android.app.Application
-import android.nfc.Tag
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.steamedbunx.android.whathaveidone.RecordDisplayMode
-import com.steamedbunx.android.whathaveidone.TAG
 import com.steamedbunx.android.whathaveidone.Utils
 import com.steamedbunx.android.whathaveidone.database.TaskDatabaseDao
 import com.steamedbunx.android.whathaveidone.database.TaskRecord
@@ -117,22 +114,25 @@ class MainViewModel(
         updateTimeString(timer.getTimerString())
     }
 
-    fun changeTask(taskName: String): Boolean {
-        if (taskName != currentTask.value
-            && !taskName.isBlank()
+    fun changeTask(inputTaskName: String): Boolean {
+        val taskNameForStorage = utils.processStringForStorage(inputTaskName)
+        if (taskNameForStorage != currentTask.value
+            && !taskNameForStorage.isBlank()
         ) {
             storeTaskToLog()
-            _currentTask.value = taskName
+            _currentTask.value = taskNameForStorage
             timer.reset()
             updateTimeString(timer.getTimerString())
-            prefUtil.storeLastTask(getApplication(), taskName, timer.startTime)
+            prefUtil.storeLastTask(getApplication(), taskNameForStorage, timer.startTime)
             return true
         }
         return false
     }
 
     fun storeTaskToLog() {
-        if (currentTask.value != null && currentTask.value != "" && currentTask.value != "Nothing") {
+        if (currentTask.value != null &&
+            currentTask.value != "" &&
+            currentTask.value.toString().toLowerCase() != "nothing") {
             val name = currentTask.value ?: ""
             val startTime = timer.startTime
             val endTime = Date()

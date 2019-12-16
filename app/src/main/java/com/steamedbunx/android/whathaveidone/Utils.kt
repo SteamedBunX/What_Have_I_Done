@@ -2,6 +2,7 @@ package com.steamedbunx.android.whathaveidone
 
 import android.icu.text.SimpleDateFormat
 import android.os.Build
+import java.lang.StringBuilder
 import java.util.*
 
 class Utils private constructor() {
@@ -59,6 +60,30 @@ class Utils private constructor() {
             return simpleDate.format(Date(date))
         }
         return ""
+    }
+
+    fun processStringForStorage(inputString:String):String{
+        return inputString
+            .trim()
+            .replace("\\s+".toRegex(), " ")
+            .toLowerCase()
+    }
+
+    fun processStringForDisplay(inputString:String):String{
+        var result:StringBuilder = StringBuilder()
+        var startOfWord = true
+        inputString.forEach {
+            if(startOfWord){
+                result.append(it.toUpperCase())
+                startOfWord = false
+            }else{
+                result.append(it)
+                if(it == ' '){
+                    startOfWord = true
+                }
+            }
+        }
+        return result.toString()
     }
 
 }

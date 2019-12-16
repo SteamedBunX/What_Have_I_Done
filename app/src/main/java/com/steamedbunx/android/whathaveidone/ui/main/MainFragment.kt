@@ -21,6 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.steamedbunx.android.whathaveidone.MainViewModelFactory
 import com.steamedbunx.android.whathaveidone.R
 import com.steamedbunx.android.whathaveidone.RecordDisplayMode
+import com.steamedbunx.android.whathaveidone.Utils
 import com.steamedbunx.android.whathaveidone.database.TaskDatabase
 import com.steamedbunx.android.whathaveidone.databinding.MainFragmentBinding
 import com.steamedbunx.android.whathaveidone.recyclerviewComponent.VerticalSpaceItemDecoration
@@ -29,6 +30,7 @@ import com.steamedbunx.android.whathaveidone.widget.CustomDraggableFloatingActio
 class MainFragment : Fragment() {
 
     lateinit var navController: NavController
+    val utils = Utils.getInstence()
 
     companion object {
         fun newInstance() = MainFragment()
@@ -140,7 +142,7 @@ class MainFragment : Fragment() {
             binding.textTimer.text = it
         })
         viewModel.currentTask.observe(this, Observer {
-            binding.textCurrentTask.text = it
+            binding.textCurrentTask.text = utils.processStringForDisplay(it)
         })
         viewModel.isBottomSheetVisible.observe(this, Observer {
             bottomSheetBehavior.state =
